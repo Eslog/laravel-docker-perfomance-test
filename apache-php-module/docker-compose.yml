@@ -1,0 +1,29 @@
+services:
+  app:
+    build: ./infra/php
+    container_name: app-container
+    volumes:
+      - ./infra/php/php.ini:/usr/local/etc/php/php.ini
+      - ./laravel:/var/www
+      - vendor-volumes:/var/www/vendor
+    ports:
+      - '3000:80'
+    depends_on:
+      - db
+
+  db:
+    build: ./infra/mysql
+    container_name: db-container
+    volumes:
+      - ./infra/mysql/data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql
+      - MYSQL_DATABASE=database
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - TZ=Asia/Tokyo
+    ports:
+      - '3306:3306'
+
+volumes:
+  vendor-volumes:
